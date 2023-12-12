@@ -1,0 +1,38 @@
+{
+    "instances": [
+        {
+            "name": "bigip1",
+            "address": "172.16.224.133",
+            "port": "8443",
+            "user": "apiuser",
+            "password": "DayKh0ngPha1"
+        },
+        {
+            "name": "bigip2",
+            "address": "5.6.7.8",
+            "port": "443",
+            "user": "apiuser",
+            "password": "DayKh0ngPha1"
+        }
+    ],
+    "keys": [
+        {
+            "owner": "quanna",
+            "keydata": "Abc123",
+            "pool": "pool1",
+            "bigip": "bigip1"
+        },
+        {
+            "owner": "hungnq",
+            "keydata": "Abc123",
+            "pool": "pool2",
+            "bigip": "bigip2"
+        },
+        {
+            "owner": "hungnq",
+            "keydata": "Abc123",
+            "pool": "pool1",
+            "bigip": "bigip1"
+        }
+    ]
+}
