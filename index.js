@@ -95,7 +95,7 @@ app.get('/api/:instance_name/pools', async (req, res) => {
       .then(function (response) {
         // handle success
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(response.data.items)); 
+        res.end(JSON.stringify(response.data)); 
       })
       .catch(function (error) {
         // handle error
@@ -155,6 +155,45 @@ app.get('/api/:instance_name/:pool_name', async (req, res) => {
   }
 });
 
+//### get the statistics of a pool in a bigip instance
+app.get('/api/:instance_name/:pool_name/stats', async (req, res) => {
+  var instance_name = req.params.instance_name;
+  var pool_name = req.params.pool_name;
+  var this_instance = instances.find(({ name }) => name === instance_name);
+  var baseurl = 'https://' + this_instance.address + ':' + this_instance.port + '/mgmt/tm/ltm/pool/' + pool_name + "/stats";
+  var basicAuth = 'Basic ' + btoa(this_instance.user + ':' + this_instance.password);
+
+  if (req.headers.apikey == undefined) {
+    res.status(401);
+    res.end('apikey header was not found');
+    console.log('apikey header was not found')
+  } else {
+    if (auth(req.headers.apikey, this_instance.name, pool_name)) {
+      axios.get(baseurl, { headers: { 'Authorization': basicAuth }})
+      .then(function (response) {
+        // handle success
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(response.data)); 
+      })
+      .catch(function (error) {
+        // handle error
+        // tra lai cho client status code nhan duoc tu BIG-IP
+        // 401 --> sai user/pass vao BIG-IP
+        // 404 --> sai ten pool, member..
+        res.status(error.response.status);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(error));
+      })
+      .finally(function () {
+        // always executed
+      });
+    } else {
+      res.status(401);
+      res.end(); 
+    }
+  }
+});
+
 //### get the list of members in a pool in a bigip instance
 app.get('/api/:instance_name/:pool_name/members', async (req, res) => {
   var instance_name = req.params.instance_name;
@@ -173,7 +212,48 @@ app.get('/api/:instance_name/:pool_name/members', async (req, res) => {
       .then(function (response) {
         // handle success
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(response.data.items)); 
+        res.end(JSON.stringify(response.data)); 
+      })
+      .catch(function (error) {
+        // handle error
+        // tra lai cho client status code nhan duoc tu BIG-IP
+        // 401 --> sai user/pass vao BIG-IP
+        // 404 --> sai ten pool, member..
+        res.status(error.response.status);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(error));
+      })
+      .finally(function () {
+        // always executed
+      });
+    } else {
+      res.status(401);
+      res.end(); 
+    }
+  }
+});
+
+//### get the statistics of members in a pool in a bigip instance
+app.get('/api/:instance_name/:pool_name/memberstats', async (req, res) => {
+  var instance_name = req.params.instance_name;
+  var pool_name = req.params.pool_name;
+  var this_instance = instances.find(({ name }) => name === instance_name);
+  var baseurl = 'https://' + this_instance.address + ':' + this_instance.port + '/mgmt/tm/ltm/pool/~Common~' + pool_name + '/members/stats';
+  var basicAuth = 'Basic ' + btoa(this_instance.user + ':' + this_instance.password);
+  console.log(baseurl);
+
+  if (req.headers.apikey == undefined) {
+    res.status(401);
+    res.end('apikey header was not found');
+    console.log('apikey header was not found')
+  } else {
+    if (auth(req.headers.apikey, this_instance.name, pool_name)) {
+      console.log('auth ok');
+      axios.get(baseurl, { headers: { 'Authorization': basicAuth }})
+      .then(function (response) {
+        // handle success
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(response.data)); 
       })
       .catch(function (error) {
         // handle error
@@ -200,7 +280,7 @@ app.get('/api/:instance_name/:pool_name/:member_name/disabled', async (req, res)
   var pool_name = req.params.pool_name;
   var member_name = req.params.member_name;
   var this_instance = instances.find(({ name }) => name === instance_name);
-  var baseurl = 'https://' + this_instance.address + ':' + this_instance.port + '/mgmt/tm/ltm/pool/' + pool_name + '/members/' + member_name;
+  var baseurl = 'https://' + this_instance.address + ':' + this_instance.port + '/mgmt/tm/ltm/pool/' + pool_name + '/members/~Common~' + member_name;
   var basicAuth = 'Basic ' + btoa(this_instance.user + ':' + this_instance.password);
 
   if (req.headers.apikey == undefined) {
@@ -241,7 +321,7 @@ app.get('/api/:instance_name/:pool_name/:member_name/enabled', async (req, res) 
   var member_name = req.params.member_name;
   var this_instance = instances.find(({ name }) => name === instance_name);
 
-  var baseurl = 'https://' + this_instance.address + ':' + this_instance.port + '/mgmt/tm/ltm/pool/' + pool_name + '/members/' + member_name;
+  var baseurl = 'https://' + this_instance.address + ':' + this_instance.port + '/mgmt/tm/ltm/pool/' + pool_name + '/members/~Common~' + member_name;
   var basicAuth = 'Basic ' + btoa(this_instance.user + ':' + this_instance.password);
 
   if (req.headers.apikey == undefined) {
@@ -251,6 +331,46 @@ app.get('/api/:instance_name/:pool_name/:member_name/enabled', async (req, res) 
   } else {
     if (auth(req.headers.apikey, this_instance.name, pool_name)) {
       axios.patch(baseurl, { session: 'user-enabled' }, { headers: { 'Authorization': basicAuth }} )
+      .then(function (response) {
+        // handle success
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(response.data)); 
+      })
+      .catch(function (error) {
+        // handle error
+        // tra lai cho client status code nhan duoc tu BIG-IP
+        // 401 --> sai user/pass vao BIG-IP
+        // 404 --> sai ten pool, member..
+        res.status(error.response.status);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(error));
+      })
+      .finally(function () {
+        // always executed
+      });
+    } else {
+      res.status(401);
+      res.end(); 
+    }
+  }
+});
+
+// get statistics of a member in a pool in a bigip instance
+app.get('/api/:instance_name/:pool_name/:member_name/stats', async (req, res) => {
+  var instance_name = req.params.instance_name;
+  var pool_name = req.params.pool_name;
+  var member_name = req.params.member_name;
+  var this_instance = instances.find(({ name }) => name === instance_name);
+  var baseurl = 'https://' + this_instance.address + ':' + this_instance.port + '/mgmt/tm/ltm/pool/' + pool_name + '/members/~Common~' + member_name + '/stats';
+  var basicAuth = 'Basic ' + btoa(this_instance.user + ':' + this_instance.password);
+
+  if (req.headers.apikey == undefined) {
+    res.status(401);
+    res.end('apikey header was not found');
+    console.log('apikey header was not found')
+  } else {
+    if (auth(req.headers.apikey, this_instance.name, pool_name)) {
+      axios.get(baseurl, { headers: { 'Authorization': basicAuth }} )
       .then(function (response) {
         // handle success
         res.setHeader('Content-Type', 'application/json');
