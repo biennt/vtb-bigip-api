@@ -25,14 +25,20 @@
         {
             "owner": "hungnq",
             "keydata": "Abc123",
-            "pool": "pool2",
-            "bigip": "bigip2"
+            "pool": "pool1",
+            "bigip": "bigip1"
         },
         {
             "owner": "hungnq",
             "keydata": "Abc123",
-            "pool": "pool1",
+            "pool": "pool2",
             "bigip": "bigip1"
+        },
+        {
+            "owner": "hungnq",
+            "keydata": "Abc123",
+            "pool": "pool2",
+            "bigip": "bigip2"
         }
     ]
 }
