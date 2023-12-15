@@ -39,9 +39,7 @@ Trong đó có 2 phần
 
 ## Sử dụng
 Dùng postman hoặc curl, gửi kèm apikey dưới dạng header theo format: owner-keydata (ví dụ quanna-Abc123).
-Hiện tại mới có những endpoint sau được thực hiện:
 
-- /api/bigips: xem danh sách các con BIG-IP đã được khai báo trong config.json (chỉ cần có 1 apikey hợp lệ là xem được)
 Ví dụ:
 ```
 curl  -H 'apikey: quanna-Abc123' http://localhost:3300/api/bigips
@@ -49,109 +47,5 @@ curl  -H 'apikey: quanna-Abc123' http://localhost:3300/api/bigips
 kết qủa cho ra:
 [{"name":"bigip1","address":"172.16.224.133","port":"8443","user":"apiuser"},{"name":"bigip2","address":"5.6.7.8","port":"443","user":"apiuser"}]
 ```
-- /api/:instance_name/pools: xem danh sách các pool trên 1 con BIG-IP cụ thể
-Ví dụ:
-```
-curl  -H 'apikey: quanna-Abc123' http://localhost:3300/api/bigip1/pools
 
-Kết quả cho ra:
-{
-  "kind": "tm:ltm:pool:poolcollectionstate",
-  "selfLink": "https://localhost/mgmt/tm/ltm/pool?ver=15.1.10.2",
-  "items": [
-    {
-      "kind": "tm:ltm:pool:poolstate",
-      "name": "pool1",
-      "partition": "Common",
-      "fullPath": "/Common/pool1",
-      "generation": 96,
-      "selfLink": "https://localhost/mgmt/tm/ltm/pool/~Common~pool1?ver=15.1.10.2",
-      "allowNat": "yes",
-      "allowSnat": "yes",
-      "ignorePersistedWeight": "disabled",
-      "ipTosToClient": "pass-through",
-      "ipTosToServer": "pass-through",
-      "linkQosToClient": "pass-through",
-      "linkQosToServer": "pass-through",
-      "loadBalancingMode": "round-robin",
-      "minActiveMembers": 0,
-      "minUpMembers": 0,
-      "minUpMembersAction": "failover",
-      "minUpMembersChecking": "disabled",
-      "monitor": "/Common/http",
-      "queueDepthLimit": 0,
-      "queueOnConnectionLimit": "disabled",
-      "queueTimeLimit": 0,
-      "reselectTries": 0,
-      "serviceDownAction": "none",
-      "slowRampTime": 10,
-      "membersReference": {
-        "link": "https://localhost/mgmt/tm/ltm/pool/~Common~pool1/members?ver=15.1.10.2",
-        "isSubcollection": true
-      }
-    },
-    {
-      "kind": "tm:ltm:pool:poolstate",
-      "name": "pool2",
-      "partition": "Common",
-      "fullPath": "/Common/pool2",
-      "generation": 1,
-      "selfLink": "https://localhost/mgmt/tm/ltm/pool/~Common~pool2?ver=15.1.10.2",
-      "allowNat": "yes",
-      "allowSnat": "yes",
-      "ignorePersistedWeight": "disabled",
-      "ipTosToClient": "pass-through",
-      "ipTosToServer": "pass-through",
-      "linkQosToClient": "pass-through",
-      "linkQosToServer": "pass-through",
-      "loadBalancingMode": "round-robin",
-      "minActiveMembers": 0,
-      "minUpMembers": 0,
-      "minUpMembersAction": "failover",
-      "minUpMembersChecking": "disabled",
-      "monitor": "/Common/http",
-      "queueDepthLimit": 0,
-      "queueOnConnectionLimit": "disabled",
-      "queueTimeLimit": 0,
-      "reselectTries": 0,
-      "serviceDownAction": "none",
-      "slowRampTime": 10,
-      "membersReference": {
-        "link": "https://localhost/mgmt/tm/ltm/pool/~Common~pool2/members?ver=15.1.10.2",
-        "isSubcollection": true
-      }
-    },
-    {
-      "kind": "tm:ltm:pool:poolstate",
-      "name": "pool3",
-      "partition": "Common",
-      "fullPath": "/Common/pool3",
-      "generation": 1,
-      "selfLink": "https://localhost/mgmt/tm/ltm/pool/~Common~pool3?ver=15.1.10.2",
-      "allowNat": "yes",
-      "allowSnat": "yes",
-      "ignorePersistedWeight": "disabled",
-      "ipTosToClient": "pass-through",
-      "ipTosToServer": "pass-through",
-      "linkQosToClient": "pass-through",
-      "linkQosToServer": "pass-through",
-      "loadBalancingMode": "round-robin",
-      "minActiveMembers": 0,
-      "minUpMembers": 0,
-      "minUpMembersAction": "failover",
-      "minUpMembersChecking": "disabled",
-      "monitor": "/Common/tcp",
-      "queueDepthLimit": 0,
-      "queueOnConnectionLimit": "disabled",
-      "queueTimeLimit": 0,
-      "reselectTries": 0,
-      "serviceDownAction": "none",
-      "slowRampTime": 10,
-      "membersReference": {
-        "link": "https://localhost/mgmt/tm/ltm/pool/~Common~pool3/members?ver=15.1.10.2",
-        "isSubcollection": true
-      }
-    }
-  ]
-}
-```
+Xem trong source code index.js để biết các API endpoint đang có
