@@ -28,7 +28,7 @@ nodemon index.js
 
 Hoặc dùng pm2 (cài đặt bằng `npm install pm2@latest -g`):
 ```
-pm2 start app.js
+pm2 start index.js
 ```
 
 ## Cấu hình, khai báo tài khoản vào các con BIG-IP cũng như api key, quyền cho API client
